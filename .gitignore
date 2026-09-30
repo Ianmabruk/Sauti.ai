@@ -1,35 +1,52 @@
-# Dependencies
-node_modules/
-.pnp
-.pnp.js
-
-# Next.js build output
-.next/
-out/
-next-env.d.ts.bak
-
-# Production
+# --- Python ---------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
 build/
 dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
-# Environment
+# Virtual environments
+.venv/
+venv/
+env/
+
+# --- Environment — never commit real keys ---------------------------
 .env
 .env.local
 .env.*.local
+# JARVIS persists conversation memory here.
+jarvis_state.json
 
-# Editor and OS noise
-.DS_Store
-Thumbs.db
-*.swp
+# --- Application data -----------------------------------------------
+instance/
+*.db
+*.sqlite
+*.sqlite3
 
-# Logs
+# --- Node / Next.js --------------------------------------------------
+node_modules/
+.pnp
+.pnp.js
+.next/
+out/
+next-env.d.ts.bak
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 *.log
-
-# Testing
 coverage/
-
-# TypeScript
 *.tsbuildinfo
+
+# --- Editors and OS --------------------------------------------------
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
