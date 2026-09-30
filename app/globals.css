@@ -1,0 +1,34 @@
+/* Global stylesheet for the Sauti AI assistant UI.
+ *
+ * Tailwind's three directives generate the utility classes used by every
+ * component. The `@layer base` block then pins the document defaults to the
+ * design tokens, so no page or component has to repeat `font-sans`,
+ * `text-sauti-text` or `bg-sauti-bg` on its root element.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: theme("fontFamily.sans");
+    background-color: theme("colors.sauti.bg");
+    color: theme("colors.sauti.text");
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Any element that draws a border uses the token, not the browser default. */
+  *,
+  ::before,
+  ::after {
+    border-color: theme("colors.sauti.border");
+  }
+}
