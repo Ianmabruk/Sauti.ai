@@ -1,0 +1,39 @@
+# Render blueprint for the Sauti AI frontend (Next.js).
+#
+# Deploy with: connect this repository in Render, choose "Blueprint".
+#
+# IMPORTANT — the backend URL must be set BEFORE the first build.
+#
+# Next.js inlines every NEXT_PUBLIC_* variable into the client bundle at build
+# time. If API_URL is empty during `npm run build`, the deployed app is
+# permanently hardwired to http://localhost:8000 and there is no runtime fix —
+# the service must be redeployed after the variable is set.
+#
+# Set it to the backend's public URL, e.g. https://sautipay-backend.onrender.com
+# The backend must also list this frontend's origin in ALLOWED_ORIGINS.
+
+services:
+  - type: web
+    name: sauti-ai
+    runtime: node
+    plan: free
+    region: frankfurt
+
+    rootDir: .
+
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+
+    healthCheckPath: /api/health
+
+    envVars:
+      - key: NODE_VERSION
+        value: "22.17.0"
+
+      # Public address of the Render backend service. Set before deploying.
+      - key: NEXT_PUBLIC_API_URL
+        sync: false
+
+      # Next.js telemetry banner in the build log; harmless to disable.
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"

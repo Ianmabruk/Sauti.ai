@@ -194,7 +194,34 @@ column carries a matching left offset.
   from the original design: `text-amber-400` on sun and star glyphs, and
   `gray-200`/`gray-300` on image placeholders.
 
-## Deploying
+## Deploying to Render
+
+`render.yaml` is a Render blueprint. Connect the repo in Render, pick
+**Blueprint**, and Render reads it.
+
+| Variable | Must set | Notes |
+| --- | --- | --- |
+| `ALLOWED_ORIGINS` | yes | The frontend's public origin, e.g. `https://sauti-ai.onrender.com`. Set after the first frontend deploy. |
+| `GROQ_API_KEY` | yes | From [console.groq.com](https://console.groq.com/keys). |
+| `SEARCH_API_KEY` | for real research | Any `SEARCH_PROVIDER` other than `stub`. |
+
+`ADMIN_TOKEN` and `SECRET_KEY` are generated for you. Postgres is provisioned
+and `DATABASE_URL` wired in automatically.
+
+**Two things that will bite if ignored:**
+
+1. **`NEXT_PUBLIC_API_URL` must be set before the build, not after.** Next.js
+   inlines `NEXT_PUBLIC_*` into the client bundle at build time. If the variable
+   is empty during `npm run build`, the deployed app is permanently hardwired to
+   `http://localhost:8000`, and no runtime change fixes it — you must redeploy.
+   Deploy the backend first, copy its URL, then deploy the frontend.
+2. **Free-tier disks do not exist**, so uploaded media under `instance/media`
+   is lost on every restart and redeploy. Uncomment the `disk` block and use a
+   paid plan if you need uploads to persist.
+
+Deploy order: backend first, then frontend with its URL.
+
+### Deploying elsewhere
 
 The frontend deploys as any standard Next.js application — Vercel, or any Node
 host. Set `NEXT_PUBLIC_API_URL` to the public address of the backend and add
@@ -217,7 +244,7 @@ The backend deploys with gunicorn. Note the target is `wsgi:app`, not
 `app`:
 
 ```bash
-gunicorn -w 4 -b 0.0.0.0:8000 wsgi:app
+gunicorn -w 2 -b 0.0.0.0:$PORT wsgi:app
 ```
 
 It must run with the repository root as the working directory, because the `ai`
